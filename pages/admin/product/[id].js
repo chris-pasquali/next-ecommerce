@@ -2,7 +2,7 @@ import axios from "axios";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import NextLink from "next/link";
-import React, { useEffect, useContext, useReducer, useState } from "react";
+import React, { useEffect, useContext, useReducer } from "react";
 import {
   Grid,
   List,
@@ -13,8 +13,6 @@ import {
   ListItemText,
   TextField,
   CircularProgress,
-  FormControlLabel,
-  Checkbox,
 } from "@material-ui/core";
 import { getError } from "../../../utils/error";
 import { Store } from "../../../utils/Store";
@@ -155,7 +153,7 @@ function ProductEdit({ params }) {
     }
   };
 
-  const [isFeatured, setIsFeatured] = useState(false);
+  // const [isFeatured, setIsFeatured] = useState(false);
 
   return (
     <Layout title={`Edit Product ${productId}`}>

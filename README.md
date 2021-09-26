@@ -2,6 +2,9 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
+sudo systemctl start mongod
+
+
 First, run the development server:
 
 ```bash

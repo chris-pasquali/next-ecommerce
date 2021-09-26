@@ -2,8 +2,7 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
-sudo systemctl start mongod
-
+Deployed at - https://next-ecommerce-ruby.vercel.app/
 
 First, run the development server:
 

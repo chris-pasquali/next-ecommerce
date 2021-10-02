@@ -12,7 +12,7 @@ import { Store } from "../utils/Store";
 import useStyles from "../utils/styles";
 import Cookies from "js-cookie";
 import { Controller, useForm } from "react-hook-form";
-import CheckoutWizard from '../components/CheckoutWizard';
+import CheckoutWizard from "../components/CheckoutWizard";
 
 export default function Shipping() {
   const {
@@ -20,19 +20,24 @@ export default function Shipping() {
     control,
     formState: { errors },
     setValue,
+    getValues,
   } = useForm();
   const router = useRouter();
   const { state, dispatch } = useContext(Store);
-  const { userInfo, cart: { shippingAddress } } = state;
+  const {
+    userInfo,
+    cart: { shippingAddress },
+  } = state;
+  const { location } = shippingAddress;
   useEffect(() => {
     if (!userInfo) {
       router.push("/login?redirect=/shipping");
     }
-    setValue('fullName', shippingAddress.fullName);
-    setValue('address', shippingAddress.address);
-    setValue('city', shippingAddress.city);
-    setValue('postalCode', shippingAddress.postalCode);
-    setValue('country', shippingAddress.country);
+    setValue("fullName", shippingAddress.fullName);
+    setValue("address", shippingAddress.address);
+    setValue("city", shippingAddress.city);
+    setValue("postalCode", shippingAddress.postalCode);
+    setValue("country", shippingAddress.country);
   }, []);
 
   const classes = useStyles();
@@ -44,14 +49,37 @@ export default function Shipping() {
       city,
       postalCode,
       country,
+      location,
     });
     dispatch({
       type: "SAVE_SHIPPING_ADDRESS",
-      payload: { fullName, address, city, postalCode, country },
+      payload: { fullName, address, city, postalCode, country, location },
     });
     Cookies.set("shippingAddress", cookieData);
     router.push("/payment");
   };
+
+  const chooseLocationHandler = () => {
+    const fullName = getValues('fullName');
+    const address = getValues('address');
+    const city = getValues('city');
+    const postalCode = getValues('postalCode');
+    const country = getValues('country');
+    dispatch({
+      type: 'SAVE_SHIPPING_ADDRESS',
+      payload: { fullName, address, city, postalCode, country },
+    });
+    const cookieData = JSON.stringify({
+      fullName,
+      address,
+      city,
+      postalCode,
+      country,
+      location,
+    });
+    Cookies.set('shippingAddress', cookieData)
+    router.push('/map');
+  }
 
   return (
     <Layout title="Shipping">
@@ -135,10 +163,10 @@ export default function Shipping() {
                   error={Boolean(errors.city)}
                   helperText={
                     errors.city
-                      ? errors.city.type === 'minLength'
-                        ? 'City length is more than 1'
-                        : 'City is required'
-                      : ''
+                      ? errors.city.type === "minLength"
+                        ? "City length is more than 1"
+                        : "City is required"
+                      : ""
                   }
                   {...field}
                 ></TextField>
@@ -163,10 +191,10 @@ export default function Shipping() {
                   error={Boolean(errors.postalCode)}
                   helperText={
                     errors.postalCode
-                      ? errors.postalCode.type === 'minLength'
-                        ? 'Postal Code length is more than 1'
-                        : 'Postal Code is required'
-                      : ''
+                      ? errors.postalCode.type === "minLength"
+                        ? "Postal Code length is more than 1"
+                        : "Postal Code is required"
+                      : ""
                   }
                   {...field}
                 ></TextField>
@@ -191,15 +219,27 @@ export default function Shipping() {
                   error={Boolean(errors.country)}
                   helperText={
                     errors.country
-                      ? errors.country.type === 'minLength'
-                        ? 'Country length is more than 1'
-                        : 'Country is required'
-                      : ''
+                      ? errors.country.type === "minLength"
+                        ? "Country length is more than 1"
+                        : "Country is required"
+                      : ""
                   }
                   {...field}
                 ></TextField>
               )}
             ></Controller>
+          </ListItem>
+          <ListItem>
+            <Button
+              variant="contained"
+              type="button"
+              onClick={chooseLocationHandler}
+            >
+              Choose on map
+            </Button>
+            <Typography>
+              {location.lat && `${location.lat}, ${location.lat}`}
+            </Typography>
           </ListItem>
           <ListItem>
             <Button variant="contained" type="submit" fullWidth color="primary">
